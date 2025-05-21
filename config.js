@@ -1,27 +1,14 @@
 const mongoose=require("mongoose");
-const express=require("express");
-const { type } = require("os");
-const app=express();
-app.use(express.json());
 
-const connection=mongoose.connect("mongodb://localhost:27017/TaskSync");
+const connectDB=async()=>{
+    try {
+        await mongoose.connect("mongodb://localhost:27017/TaskSync");
+        console.log("Database connected");
+    }catch(err){
+        console.log("Connection failed:"+err);
+    }    
+};
 
-connection.then(()=>{
-    console.log("Connected to MongoDB");
-}).catch(()=>{
-    console.log("Failed to connect to MongoDB");
-})
+module.exports=connectDB;
 
 
-const userSchema=new mongoose.Schema({
-    UserId:{
-        type:Number,
-        required:true,
-        unique:true
-    },
-    userName:{
-        type:String,
-        required:true
-    }
-    }
-})
