@@ -20,6 +20,27 @@ const userSchema=new mongoose.Schema({
     }
 });
 
+const organizationSchema = new mongoose.Schema({
+  organizationId: { 
+    type: String,
+    unique: true,
+    required: true
+  },
+  organizationName: {
+    type: String,
+    required: true
+  },
+  members: [{
+    type: String,
+    ref: 'Users',  
+    required: true
+  }]
+});
+
 const User=mongoose.model("Users",userSchema);
-module.exports=User;
+const Organization = mongoose.model('Organization', organizationSchema);
+
+module.exports = { User, Organization };
+
+// module.exports=User;
 
