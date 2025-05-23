@@ -50,17 +50,17 @@ app.post('/sign_in',async(req,res)=>{
 });
 
 app.post('/sign_up',async(req,res)=>{
-  const data={Email:req.body.mail,Password:'',UserId:-1,UserName:req.body.name};
-  const user=collection.findOne({Email:data.Email});
+  const data={Email:req.body.mail,Password:'',UserId:"-1a",UserName:req.body.name};
+  const user=await collection.findOne({Email:data.Email});
   if(user){
     console.log('Account already exits for this Email');
     return res.send({message:'mae'});
   }
   const saltRound=10;
   data.Password= await bcrypt.hash(req.body.pass,saltRound);
-  //before saving create and asing the user id to data.UserId.
   const newuser=new collection(data);
   await newuser.save();
+  data.UserId=newuser._id.toString();// This is the code to get thhe userId, use it after .save then only we will get the value
   const token=jwt.sign({Userid:data.UserId,name:data.UserName,mail:data.Email}) ;
   res.cookie('token', token, {
         httpOnly: true,
