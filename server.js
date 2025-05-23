@@ -8,8 +8,8 @@ const path=require("path");
 const webpush =require('webpush');
 const cron = require('cron');
 //const collection = require('./config');
-const taskdb=require('./models/task')
-const {Userdb,Organisationdb}=require('./models/user')
+const task=require('./models/task')
+const {Users,Organisation}=require('./models/user')
 
 const { connection } = require("mongoose");
 require('dotenv').config();
@@ -39,7 +39,7 @@ webpush.setVapidDetails(
 app.post('/sign_in',async(req,res)=>{
     const email=req.body.email;
     const pass=req.body.pass;
-    const user = await collection.findOne({Email:email});
+    const user = await Users.findOne({Email:email});
     if(!user){
         console.log("No user found");
         return res.send({message: 'nuf' });
@@ -63,14 +63,14 @@ app.post('/sign_in',async(req,res)=>{
 
 app.post('/sign_up',async(req,res)=>{
   const data={Email:req.body.mail,Password:'',UserId:"-1a",UserName:req.body.name};
-  const user=await collection.findOne({Email:data.Email});
+  const user=await Users.findOne({Email:data.Email});
   if(user){
     console.log('Account already exits for this Email');
     return res.send({message:'mae'});
   }
   const saltRound=10;
   data.Password= await bcrypt.hash(req.body.pass,saltRound);
-  const newuser=new collection(data);
+  const newuser=new Users(data);
   await newuser.save();
   data.UserId=newuser._id.toString();
   const token=jwt.sign({Userid:data.UserId}) ;
@@ -84,9 +84,22 @@ app.post('/sign_up',async(req,res)=>{
     return res.send({message:"s"});
 });
 
-app.post('/subscribe',(req,res)=>{
-    
-})
+app.post('/subscribe',async(req,res)=>{
+    const sub = req.body.subscription;
+    const token=req.cookies.token;
+    const data = jwt.verify(token,process.env.SECRET_KEY);
+    const UserId=data.UserId;
+    const user = Users.findOne({UserId:UserId}); 
+    if(user.subscription){
+        console.log('user already subscribed');
+        return res.send({message:'as'});
+    }
+    else{
+      user.subscription=sub;
+      await user.save();
+    }
+});
+
 app.listen(port,(req,res)=>{
     console.log(`server is running at http://localhost:${port}`);
 });
