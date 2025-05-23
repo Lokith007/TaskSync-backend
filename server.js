@@ -5,7 +5,12 @@ const cookieParser=require('cookie-parser');
 const cors =require('cors');
 const jwt=require('jsonwebtoken');
 const path=require("path");
-const collection = require('./config');
+const webpush =require('webpush');
+const cron = require('cron');
+//const collection = require('./config');
+const taskdb=require('./models/task')
+const {Userdb,Organisationdb}=require('./models/user')
+
 const { connection } = require("mongoose");
 require('dotenv').config();
 
@@ -25,6 +30,12 @@ app.use(cors({
   credentials: true
 }));
 
+webpush.setVapidDetails(
+  'mailto:.........',
+   process.env.publicKey,
+   process.env.privatekey
+  );
+
 app.post('/sign_in',async(req,res)=>{
     const email=req.body.email;
     const pass=req.body.pass;
@@ -39,7 +50,7 @@ app.post('/sign_in',async(req,res)=>{
         console.log("Wrong password");
         return res.send({message:"wp"});
     }
-    const token=jwt.sign({Userid:user.UserId});
+    const token=jwt.sign({Userid:user.UserId},);
     res.cookie('token', token, {
         httpOnly: true,
         secure: false,
@@ -73,6 +84,9 @@ app.post('/sign_up',async(req,res)=>{
     return res.send({message:"s"});
 });
 
+app.post('/subscribe',(req,res)=>{
+    const subscribe=
+})
 app.listen(port,(req,res)=>{
     console.log(`server is running at http://localhost:${port}`);
 });
