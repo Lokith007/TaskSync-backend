@@ -1,5 +1,14 @@
 const mongoose=require("mongoose");
 
+const connectDB=async()=>{
+    try {
+        await mongoose.connect("mongodb://localhost:27017/TaskSync");
+        console.log("Database connected");
+    }catch(err){
+        console.log("Connection failed:"+err);
+    }    
+};
+
 const userSchema=new mongoose.Schema({
     userId:{
         type:String,
@@ -17,6 +26,10 @@ const userSchema=new mongoose.Schema({
     email:{
         type:String,
         required:true
+    },
+    efficiency:{
+      type:Number,
+      required:true
     }
 });
 
@@ -32,7 +45,10 @@ const organizationSchema = new mongoose.Schema({
   },
   members: [{
     type: String,
-    ref: 'Users',  
+    required: true
+  }],
+  admin:[{
+    type: String,
     required: true
   }]
 });
