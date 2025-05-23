@@ -26,19 +26,20 @@ app.use(cors({
 }));
 
 app.post('/sign_in',async(req,res)=>{
-    const data = {Email:req.body.mail,Password:req.body.pass};
-    const user = await collection.findOne({Email:data.Email});
+    const email=req.body.email;
+    const pass=req.body.pass;
+    const user = await collection.findOne({Email:email});
     if(!user){
         console.log("No user found");
         return res.send({message: 'nuf' });
     }
     const saltRound=10;
-    const pass= await bcrypt.hash(data.Password,saltRound);
-    if(user.Password!=pass){
+    const hashed_pass= await bcrypt.hash(pass,saltRound);
+    if(user.Password!=hashed_pass){
         console.log("Wrong password");
         return res.send({message:"wp"});
     }
-    const token=jwt.sign({Userid:user.UserId,name:user.name,mail:user.Email});
+    const token=jwt.sign({Userid:user.UserId});
     res.cookie('token', token, {
         httpOnly: true,
         secure: false,
@@ -60,8 +61,8 @@ app.post('/sign_up',async(req,res)=>{
   data.Password= await bcrypt.hash(req.body.pass,saltRound);
   const newuser=new collection(data);
   await newuser.save();
-  data.UserId=newuser._id.toString();// This is the code to get thhe userId, use it after .save then only we will get the value
-  const token=jwt.sign({Userid:data.UserId,name:data.UserName,mail:data.Email}) ;
+  data.UserId=newuser._id.toString();
+  const token=jwt.sign({Userid:data.UserId}) ;
   res.cookie('token', token, {
         httpOnly: true,
         secure: false,
