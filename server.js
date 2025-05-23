@@ -85,7 +85,7 @@ app.post('/sign_up',async(req,res)=>{
 });
 
 app.post('/subscribe',(req,res)=>{
-    const subscribe=
+    
 })
 app.listen(port,(req,res)=>{
     console.log(`server is running at http://localhost:${port}`);
