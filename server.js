@@ -5,12 +5,9 @@ const cookieParser=require('cookie-parser');
 const cors =require('cors');
 const jwt=require('jsonwebtoken');
 const path=require("path");
-const webpush =require('webpush');
-const cron = require('cron');
-//const collection = require('./config');
 const task=require('./models/task')
 const {Users,Organisation}=require('./models/user')
-
+const notify=require('./notify');
 const { connection } = require("mongoose");
 require('dotenv').config();
 
@@ -18,7 +15,9 @@ const app=express();
 const port =4444;
 const origin = [ ];
 
-app.use(express());
+app.use(express.json());
+app.use(cookieParser());
+notify.start();
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -83,6 +82,24 @@ app.post('/sign_up',async(req,res)=>{
     });
     return res.send({message:"s"});
 });
+
+app.post('/set_remainder',async(req,res)=>{
+     const time=req.body.time;
+     const date=req.body.date;
+     const token = req.cookies.token;
+     const data=jwt.verify(token,process.env.SECRET_KEY);
+     const UserId=token.UserId;
+     const user=Users.findOne({UserId:UserId});
+     const taskId=req.body.taskId;
+     let Subscription;
+     Subscription=user.Subscription;
+     if(!Subscription){
+           return res.send({message:'sn'});
+     }
+     const remainder=new Remainder({UserId:UserId,Time:time,Date:date,Subscription:Subscription,TaskId:taskId});
+     await remainder.save();
+     return res.send({message:'s'});
+})
 
 app.post('/subscribe',async(req,res)=>{
     const sub = req.body.subscription;
