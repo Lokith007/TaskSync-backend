@@ -1,62 +1,29 @@
-const mongoose=require("mongoose");
+const mongoose = require("mongoose");
 
-const connectDB=async()=>{
-    try {
-        await mongoose.connect("mongodb://localhost:27017/TaskSync");
-        console.log("Database connected");
-    }catch(err){
-        console.log("Connection failed:"+err);
-    }    
-};
-
-const userSchema=new mongoose.Schema({
-    userId:{
-        type:String,
-        required:true,
-        unique:true
-    },
-    userName:{
-        type:String,
-        required:true
-    },
-    password:{
-        type:String,
-        required:true
-    },
-    email:{
-        type:String,
-        required:true
-    },
-    efficiency:{
-      type:Number,
-      required:true
-    }
-});
-
-const organizationSchema = new mongoose.Schema({
-  organizationId: { 
+const userSchema = new mongoose.Schema({
+  userId: {
     type: String,
-    unique: true,
-    required: true
+    required: true,
+    unique: true
   },
-  organizationName: {
+  userName: {
     type: String,
     required: true
   },
-  members: [{
+  password: {
     type: String,
     required: true
-  }],
-  admin:[{
+  },
+  email: {
     type: String,
     required: true
-  }]
+  },
+  efficiency: {
+    type: Number,
+    required: true
+  }
 });
 
-const User=mongoose.model("Users",userSchema);
-const Organization = mongoose.model('Organization', organizationSchema);
+const User = mongoose.model("Users", userSchema);
 
-module.exports = { User, Organization };
-
-// module.exports=User;
-
+module.exports = User;
