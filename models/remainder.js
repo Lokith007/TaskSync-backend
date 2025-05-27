@@ -16,7 +16,8 @@ const RemainderSchema= new mongoose.schema({
     },
     subscription:{
         type:String,
-        required:true
+        required:true,
+        default:true
     }
 });
 

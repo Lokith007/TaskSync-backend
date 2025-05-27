@@ -1,25 +1,23 @@
 const mongoose = require("mongoose");
 
 const organizationSchema = new mongoose.Schema({
-  organizationId: {
-    type: String,
-    unique: true,
-    required: true
-  },
   organizationName: {
     type: String,
     required: true
   },
   members: [{
-    type: String,
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   }],
-  admin: [{
-    type: String,
-    required: true
-  }]
+  admins: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  totalTasks: {
+    type: Number,
+    default: 0
+  }
 });
 
 const Organization = mongoose.model("Organization", organizationSchema);
-
 module.exports = Organization;
