@@ -1,15 +1,15 @@
 const webpush =require('webpush');
 const cron = require('cron');
-// need to import the remainder schema
+const Remainder=require('/model/remainder');
 const Task=require('./models/task');
-const { User } = require('./models/user');
+const  User  = require('./models/user');
 
 cron.schedule('* * * * * ',async()=>{
     const now=new Date();
-    const current_date= now.toISOString().split('T')[0];
-    const current_time=`${now.getHours()}:${now.getMinutes()}`;
+    // const current_date= now.toISOString().split('T')[0];
+    // const current_time=`${now.getHours()}:${now.getMinutes()}`;
 
-    const remainders=await Remainder.find({ Date: current_date, Time: current_time});
+    const remainders=await Remainder.find({ dueTime:now});
    
     for(const rem of remainders){
          const task=await Task.findOne({TaskId:rem.TaskId});

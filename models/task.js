@@ -21,9 +21,6 @@ const taskSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  subscription :{
-    type:String
-  },
   assignedTo: {
     type: String,   // references userId
     required: true

@@ -21,7 +21,10 @@ const userSchema = new mongoose.Schema({
   efficiency: {
     type: Number,
     required: true
-  }
+  },
+   subscription :{
+    type:String
+  },
 });
 
 const User = mongoose.model("Users", userSchema);

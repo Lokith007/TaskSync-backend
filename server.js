@@ -5,8 +5,9 @@ const cookieParser=require('cookie-parser');
 const cors =require('cors');
 const jwt=require('jsonwebtoken');
 const path=require("path");
-const task=require('./models/task')
-const {Users,Organisation}=require('./models/user')
+const task=require('./models/task');
+const {Users,Organisation}=require('./models/user');
+const Remainder=require('/model/remainder');
 const notify=require('./notify');
 const { connection } = require("mongoose");
 require('dotenv').config();
@@ -30,7 +31,7 @@ app.use(cors({
 }));
 
 webpush.setVapidDetails(
-  'mailto:.........',
+  'mailto:tasksync.service@gmail.com',
    process.env.publicKey,
    process.env.privatekey
   );
@@ -84,8 +85,7 @@ app.post('/sign_up',async(req,res)=>{
 });
 
 app.post('/set_remainder',async(req,res)=>{
-     const time=req.body.time;
-     const date=req.body.date;
+     const due = req.body.duetime
      const token = req.cookies.token;
      const data=jwt.verify(token,process.env.SECRET_KEY);
      const UserId=token.UserId;
@@ -96,7 +96,7 @@ app.post('/set_remainder',async(req,res)=>{
      if(!Subscription){
            return res.send({message:'sn'});
      }
-     const remainder=new Remainder({UserId:UserId,Time:time,Date:date,Subscription:Subscription,TaskId:taskId});
+     const remainder=new Remainder({UserId:UserId,dueTime:due,Subscription:Subscription,TaskId:taskId});
      await remainder.save();
      return res.send({message:'s'});
 })
