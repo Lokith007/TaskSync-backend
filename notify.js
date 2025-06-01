@@ -3,6 +3,7 @@ const cron = require('cron');
 const Remainder=require('/model/remainder');
 const Task=require('./models/task');
 const  User  = require('./models/user');
+const weekly_report=require('./sendMail.js');
 
 cron.schedule('* * * * * ',async()=>{
     const now=new Date();
@@ -26,4 +27,6 @@ cron.schedule('* * * * * ',async()=>{
     }
 });
 
-module.exports= notify;
+cron.schedule('* 12 * * 0',async()=>{
+  weekly_report();
+});
