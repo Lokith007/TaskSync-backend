@@ -10,7 +10,7 @@ cron.schedule('* * * * * ',async()=>{
     // const current_date= now.toISOString().split('T')[0];
     // const current_time=`${now.getHours()}:${now.getMinutes()}`;
 
-    const remainders=await Remainder.find({ dueTime:now});
+    const remainders=await Remainder.find({ dueTime:{$lte:now}});
    
     for(const rem of remainders){
          const task=await Task.findOne({TaskId:rem.TaskId});
@@ -21,6 +21,7 @@ cron.schedule('* * * * * ',async()=>{
 
          try {
             await webpush.sendNotification(rem.subscription,payload);
+            await Remainder.deleteOne({_id:rem._id});
          }catch (err) {
         console.error("Failed to send push:", err);
       }
