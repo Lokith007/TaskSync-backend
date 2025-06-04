@@ -1,9 +1,9 @@
 const webpush =require('webpush');
 const cron = require('cron');
 const Remainder=require('/model/remainder');
-const Task=require('./models/task');
-const  User  = require('./models/user');
-const weekly_report=require('./sendMail.js');
+const Task=require('../models/task.js');
+const  User  = require('../models/user.js');
+const weekly_report=require('../sendMail.js');
 
 cron.schedule('* * * * * ',async()=>{
     const now=new Date();
