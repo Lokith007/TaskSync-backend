@@ -1,5 +1,5 @@
 const express=require('express');
-const taskhandler=require('./routeHandlers/taskHandler');
+const taskhandler=require('../routeHandlers/taskHandler');
 const taskrouter=express.Router();
 
 taskrouter.post('/setRemainder',taskhandler.setRemainder);

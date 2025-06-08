@@ -1,5 +1,5 @@
 const express=require('express');
-const handler=require('./routeHandlers/mainHandler');
+const handler=require('../routeHandlers/mainHandler');
 const router=express.Router();
 
 router.post('/sign-in',handler.signin);

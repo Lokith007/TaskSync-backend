@@ -2,8 +2,8 @@ const expressAsyncHandler=require('express-async-handler');
 const jwt = require('jsonwebtoken');
 const cookieParser=require('cookie-parser');
 const body_parse=require('body-parser');
-const Users = require('./models/user');
-const Remainder =require('./models/remainder');
+const Users = require('../models/user');
+const Remainder =require('../models/remainder');
 require('dotenv').config();
 
 const setRemainder=expressAsyncHandler(async(req,res)=>{

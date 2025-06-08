@@ -4,7 +4,7 @@ const body_parse=require('body-parser');
 const cookieParser=require('cookie-parser');
 const jwt=require('jsonwebtoken');  
 const path=require("path");  
-const Users=require('./models/user'); 
+const Users=require('../models/user'); 
 const  connection  = require("mongoose"); 
 require('dotenv').config();
 
