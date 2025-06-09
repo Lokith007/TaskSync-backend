@@ -17,13 +17,13 @@ const taskSchema = new mongoose.Schema({
   priorityLevel: {
     type: String,
     enum: ['low', 'medium', 'high'],
-    required: true
+    default: 'low'
   },
-  category: {
-    type: String,
-    enum: ['work', 'study', 'personal'],
-    required: true
-  },
+  // category: {
+  //  type: String,
+  //  enum: ['work', 'study', 'personal'],
+  //  required: true
+  // },
   completed: {
     type: Boolean,
     default: false
@@ -31,11 +31,11 @@ const taskSchema = new mongoose.Schema({
   completedAt: {
     type: Date
   },
-  assignedTo: {
+  assignedTo: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
-  },
+  }],
   organization: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Organization'

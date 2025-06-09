@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const cookieParser=require('cookie-parser');
 const body_parse=require('body-parser');
 const Users = require('../models/user');
+const Task=require('../models/task');
 const Remainder =require('../models/remainder');
 require('dotenv').config();
 
@@ -38,5 +39,51 @@ const subscribe =expressAsyncHandler(async(req,res)=>{
       await user.save();
     }
 });
+
+const addTask=async(req,res)=>{
+  try{
+    const {title,description,assignees,dueDate,organisation}=req.body;
+    const task=new Task({
+      header:title,
+      description:description,
+      assignedTo:assignees,
+      dueDate:dueDate,
+      organization:organisation
+    });
+    await task.save();
+    res.status(200).json(task);
+  }
+  catch(err){
+    console.log(err);
+    res.status(500).json({message:err.message});
+  }
+}
+
+
+const getAllTasks = async (req, res) => {
+  try {
+    const tasks = await Task.find()
+      .populate('assignedTo', 'username email')
+      .populate('organization', 'organizationSchema');
+    const formatted = tasks.map(task => ({
+      id: task._id,
+      title: task.header,
+      description: task.description,
+      dueDate: task.dueDate,
+      priority: task.priorityLevel,
+      completed: task.completed,
+      assignedTo: task.assignedTo.map(user => ({
+        username: user.username,
+        email: user.email
+      })),
+      organization: task.organization?.name || null
+    }));
+    res.status(200).json(formatted);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
 
 module.exports =taskHandler;
