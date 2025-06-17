@@ -9,7 +9,7 @@ const app=express();
 const origin = [ ];
 
 app.use(express.json());
-app.use(cookieParser());
+app.use(cookieParser()); 
 notify.start();
 app.use(cors({
   origin: function (origin, callback) {
