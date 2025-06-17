@@ -9,7 +9,7 @@ async function shouldAlert(senderId, receiverId) {
   return !!exists;
 }
 
-function setupAlertHandlers(server) {
+function setupAlertHandlers(server) { 
   const wss = new WebSocket.Server({ server });
 
   wss.on('connection', (ws) => {
